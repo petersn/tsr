@@ -1,7 +1,7 @@
  // Production model header
 
-#ifndef PSR_PRODUCTION_HEADER
-#define PSR_PRODUCTION_HEADER
+#ifndef TSR_PRODUCTION_HEADER
+#define TSR_PRODUCTION_HEADER
 
 #define CANDIDATES 12
 

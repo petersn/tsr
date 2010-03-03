@@ -1,7 +1,7 @@
  // Audio types header
 
-#ifndef PSR_AUDIO_HEADER
-#define PSR_AUDIO_HEADER
+#ifndef TSR_AUDIO_HEADER
+#define TSR_AUDIO_HEADER
 
 #ifdef  USE_DOUBLE
 typedef double Real;

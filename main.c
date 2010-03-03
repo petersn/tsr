@@ -1,4 +1,4 @@
- // Main frontend for PSR
+ // Main frontend for TSR
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,7 +14,7 @@
 int main(int argc, char **argv) {
     Audio    *audio_input = NULL;
 
-    printf("PSR2 Speech Recognizer\n");
+    printf("Tiny Speech Recognizer\n");
 
     /*
     printf("Formats:\nNO_FORMAT: %i\nEIGHT_BIT_UNSIGNED: %i\nSIXTEEN_BIT_SIGNED: %i\nDOUBLE_REAL: %i\n\n", NO_FORMAT, EIGHT_BIT_UNSIGNED, SIXTEEN_BIT_SIGNED, DOUBLE_REAL);

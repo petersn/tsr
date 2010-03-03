@@ -1,7 +1,7 @@
  // Fourier transform library header
 
-#ifndef PSR_FOURIER_HEADER
-#define PSR_FOURIER_HEADER
+#ifndef TSR_FOURIER_HEADER
+#define TSR_FOURIER_HEADER
 
 #include "audio.h"
 

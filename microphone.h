@@ -1,7 +1,7 @@
  // Microphone reading library header
 
-#ifndef PSR_MICROPHONE_HEADER
-#define PSR_MICROPHONE_HEADER
+#ifndef TSR_MICROPHONE_HEADER
+#define TSR_MICROPHONE_HEADER
 
 #include "audio.h"
 

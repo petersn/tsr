@@ -1,7 +1,7 @@
  // Feature extractor library header
 
-#ifndef PSR_FEATURES_HEADER
-#define PSR_FEATURES_HEADER
+#ifndef TSR_FEATURES_HEADER
+#define TSR_FEATURES_HEADER
 
 #define BUCKET_COUNT 1
 
