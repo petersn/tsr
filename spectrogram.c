@@ -57,10 +57,7 @@ void DrawScreen(SDL_Surface* screen, Audio *audio, int xx)
     int red, green, blue;
 
     for (ii=0; ii<(HEIGHT/Y_STRETCH); ii++) {
-        //value = frequency_component( audio, frequency( 500.0 + (((double)ii) * FREQ_MULT) ) );
         value = frequency_component( audio, frequency( (((double)(ii*Y_STRETCH)) * FREQ_MULT) ) );
-
-        //printf("%f\n", value);
 
 #ifdef SQUARE_SUPPRESS
         value *= 0.001;
@@ -76,7 +73,7 @@ void DrawScreen(SDL_Surface* screen, Audio *audio, int xx)
         red   = (int)value;
         green = 0;
         blue  = 0;
-        if (red > 5300) {
+        if (red > 16000) {
             red = 0;
             green = 255;
             blue = 0;
@@ -96,7 +93,7 @@ void DrawScreen(SDL_Surface* screen, Audio *audio, int xx)
         }
 
         if (xx+X_STRETCH < WIDTH-X_STRETCH) {
-            for (ys=0; ys<HEIGHT; ys++) {
+            for (ys=Y_STRETCH; ys<HEIGHT; ys++) {
                 setpixel(screen, xx+X_STRETCH, ys, 0, 0, 255);
             }
         }
@@ -116,6 +113,7 @@ int main(int argc, char* argv[])
     const SDL_VideoInfo *info;
     int keypress = 0;
     int capturing, captured_slices;
+    int windowing = 1;
 
     capturing = 0;
 
@@ -191,9 +189,15 @@ int main(int argc, char* argv[])
             captured_slices++;
         }
 
-#ifdef BARTLETT_WINDOWING
-        bartlett_window( audio_input );
+        if (windowing) {
+#ifdef BARTLETT_WINDOW
+            bartlett_window( audio_input );
 #endif
+
+#ifdef BLACKMAN_HARRIS_WINDOW
+            blackman_harris_window( audio_input );
+#endif
+        }
 
         if (capturing)
             DrawScreen( screen, captured, xx );
@@ -224,7 +228,8 @@ int main(int argc, char* argv[])
                         } else {
                             audio_scale( captured, 1.0 / ((Real)captured_slices) );
                         }
-
+                    } else if ( event.key.keysym.sym == SDLK_RETURN ) {
+                        windowing = !windowing;
                     } else {
                         keypress = 1;
                         break;

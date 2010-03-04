@@ -76,6 +76,47 @@ void bartlett_window( Audio *audio ) {
 
 }
 
+Real alpha[4] = {
+                    0.35875,
+                    0.48829,
+                    0.14128,
+                    0.01168,
+                };
+
+void blackman_harris_window( Audio *audio ) {
+    if (audio == NULL) {
+        printf("Warning: Attempted Blackman-Harris windowing on NULL audio.\n");
+#ifdef QUIT_ON_WARNING
+        exit(-1);
+#endif
+        return;
+    }
+    if (audio->format != DOUBLE_REAL) {
+        printf("Warning: Attempted Blackman-Harris windowing on audio of format %s.\n", format_names[audio->format]);
+#ifdef QUIT_ON_WARNING
+        exit(-1);
+#endif
+        return;
+    }
+
+    Real  coef;
+    Real *data;
+    int ii;
+    int N = audio->samples;
+
+    data = (Real *)audio->data;
+
+      //Windowing
+    for (ii=0; ii<(N/2); ii++) {
+        coef = alpha[0] - alpha[1] * cos( ((Real)ii * 2 * M_PI) / ((Real) N-1 ) ) \
+                        + alpha[2] * cos( ((Real)ii * 4 * M_PI) / ((Real) N-1 ) ) \
+                        - alpha[3] * cos( ((Real)ii * 6 * M_PI) / ((Real) N-1 ) );
+
+        data[ii] *= coef;
+    }
+
+}
+
 void fourier_transform( Audio *audio, Fourier *result, size_t samples_in_one_second ) {
     if (audio == NULL) {
         printf("Warning: Attempted Fourier transform on NULL audio.\n");
