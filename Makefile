@@ -1,4 +1,4 @@
-all: psr spectrogram
+all: tsr spectrogram
 
 # You must define one of the following two:
 #  -DUSE_FLOAT          -- use floats as the internal audio representation instead of doubles
@@ -7,8 +7,8 @@ all: psr spectrogram
 # Optional arguments to these libraries:
 #  -DQUIT_ON_WARNING    -- exit(-1) after every warning
 
-psr: audio.c audio.h fourier.c fourier.h microphone.c microphone.h features.c features.h production.c production.h main.c Makefile
-	gcc -O3 -lm -DUSE_FLOAT -DQUIT_ON_WARNING main.c audio.c fourier.c microphone.c features.c production.c -Wall -o psr
+tsr: audio.c audio.h fourier.c fourier.h microphone.c microphone.h features.c features.h production.c production.h main.c Makefile
+	gcc -O3 -lm -DUSE_FLOAT -DQUIT_ON_WARNING main.c audio.c fourier.c microphone.c features.c production.c -Wall -o tsr
 
 # Optional arguments to the spectrogram program:
 #  -DSQUARE_SUPPRESS    -- filter out low intensity frequencies by squaring every component
