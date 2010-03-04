@@ -12,11 +12,11 @@ OPTIONS+=-DUSE_DOUBLE#            #-- use doubles as the internal audio represen
 OPTIONS+=-DQUIT_ON_WARNING#       #-- exit(-1) after every warning
 
   # You may apply one (more than one allowed, but not adviced) window to reduce spectral leakage
-#OPTIONS+=-DBARTLETT_WINDOW#       #-- apply a Bartlett window to each slice (cheap, low leakage rolloff)
-OPTIONS+=-DBLACKMAN_HARRIS_WINDOW##-- apply a Blackman-Harris window to each slice (expensive, high leakage rolloff)
+OPTIONS+=-DBARTLETT_WINDOW#       #-- apply a Bartlett window to each slice (cheap, low leakage rolloff)
+#OPTIONS+=-DBLACKMAN_HARRIS_WINDOW##-- apply a Blackman-Harris window to each slice (expensive, high leakage rolloff)
 
   # Optional arguments to the spectrogram program:
-#OPTIONS+=-DSQUARE_SUPPRESS#       #-- filter out low intensity frequencies by squaring every component
+OPTIONS+=-DSQUARE_SUPPRESS#       #-- filter out low intensity frequencies by squaring every component
 
 #OPTIONS+=-DFREQ_MULT=n#           #-- Hertz per vertical pixel in spectrogram
 #OPTIONS+=-DMS_IN_TIME_SLICE=n#    #-- milliseconds per horizontal pixel in spectrogram
@@ -35,6 +35,12 @@ OPTIONS+=-DSUB_RUNNING_AVERAGE#   #-- subtract the running average feature vecto
 #OPTIONS+=-DBUCKET_COUNT=n#        #-- set the number of buckets in a feature vector
 #OPTIONS+=-DSAMPLING_MIN_FREQ=n#   #-- set the minimum frequency sampled by the feature extractor
 #OPTIONS+=-DSAMPLING_MAX_FREQ=n#   #-- set the maximum frequency sampled by the feature extractor
+
+  # Premixed configurations. Uncomment one to override all above config.
+ # Tiny, fast build
+#OPTIONS=-DUSE_FLOAT -DQUIT_ON_WARNING
+ # Bloated, featureful build
+OPTIONS=-DUSE_DOUBLE -DQUIT_ON_WARNING -DBARTLETT_WINDOW -DSUB_RUNNING_AVERAGE -DSQUARE_SUPPRESS
 
 tsr: audio.c audio.h fourier.c fourier.h microphone.c microphone.h features.c features.h production.c production.h main.c Makefile
 	$(CC) $(CFLAGS) $(OPTIONS) main.c audio.c fourier.c microphone.c features.c production.c -o tsr
