@@ -6,10 +6,14 @@
 #ifdef  USE_DOUBLE
 typedef double Real;
 
+#ifdef USE_FLOAT
+#warning You should not give both -DUSE_FLOAT and -DUSE_DOUBLE (assuming double)
+#endif
+
 #else
 
 #ifndef  USE_FLOAT
-#warning You should give either -DUSE_FLOAT or -DUSE_DOUBLE to select the internal audio representation
+#warning You should give either -DUSE_FLOAT or -DUSE_DOUBLE to select the internal audio representation (assuming float)
 #endif
 
 typedef float Real;
