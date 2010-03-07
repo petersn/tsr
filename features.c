@@ -35,6 +35,29 @@ Features features_extract( Audio *audio ) {
 
 }
 
+void square_suppress( Features *features ) {
+    int ii;
+
+    for (ii=0; ii<BUCKET_COUNT; ii++) {
+        features->buckets[ii] *= 0.001;
+        features->buckets[ii] *= features->buckets[ii];
+    }
+}
+
+int above_threshold( Features *features ) {
+    Real accumulate = 0.0;
+    int ii;
+
+    for (ii=0; ii<BUCKET_COUNT; ii++) {
+        accumulate += features->buckets[ii];
+    }
+
+    if (accumulate < NORMALIZED_UTTERANCE_THRESHOLD)
+        printf("%f accumulated, threshold %f\n", accumulate, NORMALIZED_UTTERANCE_THRESHOLD);
+
+    return (accumulate > NORMALIZED_UTTERANCE_THRESHOLD);
+}
+
 void features_pretty( Features features ) {
     int ii;
 

@@ -153,3 +153,32 @@ void audio_convert( Audio *audio, Audio_Format format ) {
 
 }
 
+int audio_save( Audio *audio, const char *path ) {
+    if (audio == NULL) {
+        printf("Warning: Attempted to write NULL audio to `%s'.\n", path);
+#ifdef QUIT_ON_WARNING
+        exit(-1);
+#endif
+        return 0;
+    }
+    if (audio->format != DOUBLE_REAL) {
+        printf("Warning: Attempted to write audio of format %s to `%s'.\n", format_names[audio->format], path);
+#ifdef QUIT_ON_WARNING
+        exit(-1);
+#endif
+        return 0;
+    }
+
+    FILE *fp;
+    int ii;
+    fp = fopen( path, "w" );
+
+    for (ii=0; ii<audio->samples; ii++) {
+        fprintf(fp, "%f\n", ((Real *)audio->data)[ii]);
+    }
+
+    fclose(fp);
+
+    return 1;
+}
+

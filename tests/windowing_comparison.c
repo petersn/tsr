@@ -36,7 +36,7 @@ int HEIGHT;
 Audio *captured     = NULL;
 int capturing       = 0;
 int captured_slices = 0;
-int windowing       = 1;
+int windowing       = 3;
 
 Audio *fourier      = NULL;
 
@@ -211,20 +211,31 @@ int main(int argc, char* argv[])
         audio_free( audio_input );
         audio_input = audio_make_buffer( SAMPLES_IN_TIME_SLICE, MIC_FORMAT );
 
-          // Read in a slice of audio
+          // Read in 50 ms of audio
         read_samples = microphone_read( SAMPLES_IN_TIME_SLICE, audio_input );
 
+        //audio_scale( audio_input, 0.0 );
+        //for (xx=0; xx<SAMPLES_IN_TIME_SLICE; xx++)
+        //    ((signed short *)audio_input->data)[ xx ] = 0;
+        memset( audio_input->data, 0, SAMPLES_IN_TIME_SLICE * MIC_SAMPLE_BYTES );
+        ((signed short *)audio_input->data)[ SAMPLES_IN_TIME_SLICE/2 ] = 30000;
+
         audio_convert( audio_input, DOUBLE_REAL );
+        audio_scale( audio_input, 5000.0 );
 
         if (windowing == 1) {
 #ifdef BARTLETT_WINDOW
             bartlett_window( audio_input );
 #endif
+        }
 
+        if (windowing == 2) {
 #ifdef BLACKMAN_HARRIS_WINDOW
             blackman_harris_window( audio_input );
 #endif
+        }
 
+        if (windowing == 3) {
 #ifdef HANN_WINDOW
             hann_window( audio_input );
 #endif
@@ -264,7 +275,8 @@ int main(int argc, char* argv[])
                     } else if ( event.key.keysym.sym == SDLK_BACKSPACE ) {
                         audio_save( captured, "phons/captured.fourier" );
                     } else if ( event.key.keysym.sym == SDLK_RETURN ) {
-                        windowing = !windowing;
+                        windowing++;
+                        windowing %= 4;
                     } else {
                         keypress = 1;
                         break;

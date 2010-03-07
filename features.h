@@ -3,16 +3,24 @@
 #ifndef TSR_FEATURES_HEADER
 #define TSR_FEATURES_HEADER
 
+#include "audio.h"
+
 #ifndef BUCKET_COUNT
 #define BUCKET_COUNT 32
 #endif
+
+#ifndef UTTERANCE_THRESHOLD
+#define UTTERANCE_THRESHOLD 80000
+#endif
+
+#define NORMALIZED_UTTERANCE_THRESHOLD ((Real)UTTERANCE_THRESHOLD*(Real)BUCKET_COUNT)
 
 #ifndef SAMPLING_MIN_FREQ
 #define SAMPLING_MIN_FREQ 400
 #endif
 
 #ifndef SAMPLING_MAX_FREQ
-#define SAMPLING_MAX_FREQ 2500
+#define SAMPLING_MAX_FREQ 8000
 #endif
 
   // Derive the affine function: freq(ii) = add + ii * mult
@@ -28,6 +36,8 @@ typedef struct {
 
   // Functions:
 Features features_extract( Audio *audio );
+void square_suppress( Features *features );
+int above_threshold( Features *features );
 void features_pretty( Features features );
 void zero_features( Features *features );
 void scale_features( Features *features, Real scalar );

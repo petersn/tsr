@@ -6,6 +6,7 @@
 #include "fourier.h"
 #include "microphone.h"
 #include "features.h"
+#include "dynamic_programming.h"
 
 #ifndef RUNNING_AVERAGE_TAU
 #define RUNNING_AVERAGE_TAU 0.9
@@ -29,17 +30,10 @@ int main(int argc, char **argv) {
 
     printf("Tiny Speech Recognizer\n");
 
-    /*
-    printf("Formats:\nNO_FORMAT: %i\nEIGHT_BIT_UNSIGNED: %i\nSIXTEEN_BIT_SIGNED: %i\nDOUBLE_REAL: %i\n\n", NO_FORMAT, EIGHT_BIT_UNSIGNED, SIXTEEN_BIT_SIGNED, DOUBLE_REAL);
-
-    printf("Samples in slice: %ld\n\n", SAMPLES_IN_TIME_SLICE);
-    //*/
-
       // Initialize
     microphone_init();
 
     audio_input = NULL;
-    //frequencies = audio_make_buffer( SAMPLES_IN_TIME_SLICE, DOUBLE_REAL );
 
     size_t read_samples;
 
@@ -48,9 +42,8 @@ int main(int argc, char **argv) {
         audio_free( audio_input );
         audio_input = audio_make_buffer( SAMPLES_IN_TIME_SLICE, MIC_FORMAT );
 
-          // Read in 50 ms of audio
+          // Read in a slice of audio
         read_samples = microphone_read( SAMPLES_IN_TIME_SLICE, audio_input );
-        //printf("Samples: %ld\n", read_samples);
 
         audio_convert( audio_input, DOUBLE_REAL );
 
@@ -68,8 +61,13 @@ int main(int argc, char **argv) {
         add_features( &running_average, &features_temporary );
 #endif
 
-        features_pretty( features );
-        //features_pretty( running_average );
+#ifdef SQUARE_SUPPRESS
+        square_suppress( &features );
+#endif
+
+        if (above_threshold( &features )) {
+            features_pretty( features );
+        }
 
         //fourier_transform( audio_input, frequencies, SAMPLES_IN_TIME_SLICE );
 

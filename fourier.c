@@ -107,12 +107,85 @@ void blackman_harris_window( Audio *audio ) {
     data = (Real *)audio->data;
 
       //Windowing
-    for (ii=0; ii<(N/2); ii++) {
+    for (ii=0; ii<N; ii++) {
         coef = alpha[0] - alpha[1] * cos( ((Real)ii * 2 * M_PI) / ((Real) N-1 ) ) \
                         + alpha[2] * cos( ((Real)ii * 4 * M_PI) / ((Real) N-1 ) ) \
                         - alpha[3] * cos( ((Real)ii * 6 * M_PI) / ((Real) N-1 ) );
 
         data[ii] *= coef;
+    }
+
+}
+
+void hann_window( Audio *audio ) {
+    if (audio == NULL) {
+        printf("Warning: Attempted Hann windowing on NULL audio.\n");
+#ifdef QUIT_ON_WARNING
+        exit(-1);
+#endif
+        return;
+    }
+    if (audio->format != DOUBLE_REAL) {
+        printf("Warning: Attempted Hann windowing on audio of format %s.\n", format_names[audio->format]);
+#ifdef QUIT_ON_WARNING
+        exit(-1);
+#endif
+        return;
+    }
+
+    Real  coef;
+    Real *data;
+    int ii;
+    int N = audio->samples;
+
+    data = (Real *)audio->data;
+
+      //Windowing
+    for (ii=0; ii<N; ii++) {
+        coef = 0.5 * (1.0 - cos ( ( 2.0 * M_PI * (Real)ii ) / ( N-1 ) ));
+        data[ii] *= coef;
+    }
+
+}
+
+inline Real rejigger( Real v ) {
+    if (v < 0.0) {
+        return -v;
+    }
+    return v;
+}
+
+void normalize( Audio *audio ) {
+    if (audio == NULL) {
+        printf("Warning: Attempted to normalize NULL audio.\n");
+#ifdef QUIT_ON_WARNING
+        exit(-1);
+#endif
+        return;
+    }
+    if (audio->format != DOUBLE_REAL) {
+        printf("Warning: Attempted to normalize audio of format %s.\n", format_names[audio->format]);
+#ifdef QUIT_ON_WARNING
+        exit(-1);
+#endif
+        return;
+    }
+    int ii;
+    Real accumulate = 0.0;
+
+      // First, find the average
+    for (ii=0; ii<audio->samples; ii++) {
+        accumulate += rejigger(((Real *)audio->data)[ii]);
+    }
+    accumulate /= (Real)audio->samples;
+
+    //printf("Mean: %f\n", accumulate);
+
+      // Next, divide each sample by the average
+    accumulate = 1.0 / accumulate;
+
+    for (ii=0; ii<audio->samples; ii++) {
+        ((Real*)audio->data)[ii] *= accumulate;
     }
 
 }

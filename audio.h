@@ -49,5 +49,7 @@ void audio_convert( Audio *audio, Audio_Format format );
 void audio_sum( Audio *audio, Audio *budio );
 void audio_scale( Audio *audio, Real scaling );
 
+int audio_save( Audio *audio, const char *path );
+
 #endif
 
