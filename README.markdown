@@ -1,3 +1,9 @@
+DEFUNCT
+=======
+
+**This entire project is defunct!**
+It has been replaced by TinySR, which you can find here: [http://github.com/petersn/tinysr](http://github.com/petersn/tinysr)
+
 
 TSR: Tiny Speech Recognizer
 ===========================
